@@ -13,7 +13,7 @@ library(DataCombine)
 library(psData)
 library(WDI)
 
-setwd('/git_repositories/EIUCrisesMeasure/summary_paper/analysis/covariate_data/')
+setwd('/git_repositories/financial_crisis_fiscal_policy/analysis_data/covariate_data/')
 
 # ------------------------------ Load and Clean Data ------------------------- #
 #### WDI Central Government Debt ####

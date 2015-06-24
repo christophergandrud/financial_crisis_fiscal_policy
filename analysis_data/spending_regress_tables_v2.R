@@ -11,10 +11,10 @@ library(stargazer)
 library(xtable)
 
 # Set working directory. Change as needed.
-setwd('/git_repositories/EIUCrisesMeasure/summary_paper/')
+setwd('/git_repositories/financial_crisis_fiscal_policy/')
 
 # Run regressions
-source('analysis/spending_regressions_v2.R')
+source('analysis_data/spending_regressions_v2.R')
 
 # Residual Regressions
 stargazer(m_r1, m_r1_econ, m_r2, m_r2_econ,
@@ -31,7 +31,7 @@ stargazer(m_r1, m_r1_econ, m_r2, m_r2_econ,
           omit = 'iso2c', omit.labels = 'country fixed effects',
           float = F,
           font.size = 'tiny',
-          out = 'tables/liab_residual_regress.tex')
+          out = 'paper/tables/liab_residual_regress.tex')
 
 # Financail stress Regressions, election year
 stargazer(m1_t0, m2_t0, m3_t0, m4_t0, m5_t0,
@@ -45,7 +45,7 @@ stargazer(m1_t0, m2_t0, m3_t0, m4_t0, m5_t0,
           float = F,
           font.size = 'tiny',
           notes = ('Standard errors in parentheses.'),
-          out = 'tables/stress_regress_t0.tex'
+          out = 'paper/tables/stress_regress_t0.tex'
 )
 
 # Financail stress Regressions, post-election year
@@ -60,7 +60,7 @@ stargazer(m1_t1, m2_t1, m3_t1, m4_t1, m5_t1,
           float = F,
           font.size = 'tiny',
           notes = ('Standard errors in parentheses.'),
-          out = 'tables/stress_regress_t1.tex'
+          out = 'paper/tables/stress_regress_t1.tex'
 )
 
 # Country sample
@@ -74,4 +74,4 @@ xtable(countries, caption = 'Regressions Country Sample',
     print(include.rownames = F,
         size = 'footnotesize',
         caption.placement = 'top',
-        file = 'tables/liab_reg_sample.tex')
+        file = 'paper/tables/liab_reg_sample.tex')

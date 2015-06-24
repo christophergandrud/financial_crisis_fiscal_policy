@@ -9,13 +9,12 @@
 library(devtools)
 library(ggplot2)
 library(gridExtra)
-library(tikzDevice)
 
 # Set working directory. Change as needed.
-setwd('/git_repositories/EIUCrisesMeasure/summary_paper/')
+setwd('/git_repositories/financial_crisis_fiscal_policy/')
 
 # Run regressions
-source('analysis/spending_regressions_v2.R')
+source('analysis_data/spending_regressions_v2.R')
 
 # Load plot function
 source_gist('d270ff55c2ca26286e90')
@@ -38,7 +37,7 @@ plot2 <- plot_me(obj = m3_t1, term1 = 'election_year_11', term2 = 'lpr',
     ggtitle('Change in Off Trend Liabilities\n')
 
 
-pdf(file = 'analysis/figures/me_stress.pdf', width = 9.3, height = 5)
+pdf(file = 'paper/figures/me_stress.pdf', width = 9.3, height = 5)
     grid.arrange(plot1, plot2, ncol = 2)
 dev.off()
 

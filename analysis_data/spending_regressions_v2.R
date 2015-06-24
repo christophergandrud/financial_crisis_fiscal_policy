@@ -12,9 +12,9 @@ library(DataCombine)
 library(ggplot2)
 
 # Set working directory. Change as needed.
-setwd('/git_repositories/EIUCrisesMeasure/summary_paper/')
+setwd('/git_repositories/financial_crisis_fiscal_policy/')
 
-comb <- import('analysis/covariate_data/epfms_covariates.csv')
+comb <- import('analysis_data/covariate_data/epfms_covariates.csv')
 
 # Convert key varaiables to factors
 comb$iso2c <- comb$iso2c %>% as.factor
