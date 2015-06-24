@@ -30,6 +30,7 @@ stargazer(m_r1, m_r1_econ, m_r2, m_r2_econ,
                                'Perceived Financial Stress'),
           omit = 'iso2c', omit.labels = 'country fixed effects',
           float = F,
+          omit.stat = c('f', 'ser'),
           font.size = 'tiny',
           out = 'paper/tables/liab_residual_regress.tex')
 
@@ -43,21 +44,25 @@ stargazer(m1_t0, m2_t0, m3_t0, m4_t0, m5_t0,
                                'Election Yr. * Loss Prob.'),
           omit = 'iso2c', omit.labels = 'country fixed effects',
           float = F,
+          omit.stat = c('f', 'ser'),
           font.size = 'tiny',
           notes = ('Standard errors in parentheses.'),
           out = 'paper/tables/stress_regress_t0.tex'
 )
 
 # Financail stress Regressions, post-election year
-stargazer(m1_t1, m2_t1, m3_t1, m4_t1, m5_t1,
+stargazer(m1_t1, m2_t1, m3_t1, m4_t1, m5_t1, m6_t1, m7_t1,
           dep.var.labels = c('$\\Delta$ Off-Trend Liabilities',
                              '$\\Delta$ Off-Trend Spending'),
           covariate.labels = c('Post-Election Yr.', 'Loss Prob.', 
                                'Econ Ideology', 'Political Constraints',
                                'Fixed FX',
+                               '$\\Delta$ Off-Trend Spending',
+                               '$\\Delta$ Off-Trend Spending$_{t-1}$',
                                'Post-Election Yr. * Loss Prob.'),
           omit = 'iso2c', omit.labels = 'country fixed effects',
           float = F,
+          omit.stat = c('f', 'ser'),
           font.size = 'tiny',
           notes = ('Standard errors in parentheses.'),
           out = 'paper/tables/stress_regress_t1.tex'
@@ -94,6 +99,7 @@ stargazer(m5_t0_cent_debt, m5_t1_cent_debt,
                                'Post-Election Yr. * Loss Prob.'),
           omit = 'iso2c', omit.labels = 'country fixed effects',
           float = F,
+          omit.stat = c('f', 'ser'),
           font.size = 'tiny',
           notes = ('Standard errors in parentheses.'),
           out = 'paper/tables/cent_debt_regressions.tex'
