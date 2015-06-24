@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------- #
-# Elections, Electoral Loss Probabilities, and Government Liabilities Shocks
+# Elections, Electoral Loss Probabilities, and Government Fiscal Policies
 # Version 2
 # Christopher Gandrud
 # MIT License
@@ -40,7 +40,7 @@ m_r2 <- lm(residuals_output_liab ~ residuals_output_liab_1 + mean_stress +
 sub_gov_liab <- sub_gov_liab %>% DropNA(c('mean_stress'))
 sub_gov_liab$residuals_stress_liab <- residuals(m_r2)
 
-sub_gov_liab <- slide(sub_gov_liab, Var = 'residuals_output_liab', 
+sub_gov_liab <- slide(sub_gov_liab, Var = 'residuals_stress_liab', 
                       NewVar = 'residuals_stress_liab_1',
                       GroupVar = 'country', TimeVar = 'year')
 
