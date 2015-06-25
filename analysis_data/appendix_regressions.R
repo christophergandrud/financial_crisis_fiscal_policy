@@ -50,15 +50,21 @@ residuals_stress_debt <- slide(residuals_stress_debt, Var = 'residuals_stress_de
 residuals_stress_debt$rs_change_debt <- residuals_stress_debt$residuals_stress_debt -
     residuals_stress_debt$residuals_stress_debt_1 
 
+residuals_stress_debt <- slide(residuals_stress_debt, Var = 'rs_change_debt', 
+                      NewVar = 'rs_change_debt_1',
+                      GroupVar = 'country', TimeVar = 'year')
+
 
 # ------------------------------- Regressions -------------------------------- #
-# Central government debt #
+# Central government debt
 
-# Spending
-m5_t0_cent_debt <- lm(rs_change_debt ~ election_year*lpr_1 + execrlc + 
+# Election year
+m5_t0_cent_debt <- lm(rs_change_debt ~ rs_change_debt_1 + election_year*lpr_1 + 
+                          execrlc + 
                           polconiii + fixed_exchange + iso2c, 
                 data = residuals_stress_debt)
 
-m5_t1_cent_debt <- lm(rs_change_debt ~ election_year_1*lpr + execrlc + 
-                          polconiii + fixed_exchange + iso2c, 
+# Post-election year
+m5_t1_cent_debt <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + execrlc + 
+                          polconiii + fixed_exchange, 
                       data = residuals_stress_debt)
