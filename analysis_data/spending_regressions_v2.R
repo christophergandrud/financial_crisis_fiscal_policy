@@ -22,34 +22,33 @@ comb$election_year <- comb$election_year %>% as.factor
 comb$election_year_1 <- comb$election_year_1 %>% as.factor
 
 ##### Create residuals #####
-# Create output gap change and government liabilities change variables
-
 # Output Gap Residuals
-m_r1 <- lm(gov_liabilities_gdp2005 ~ gov_liabilities_gdp2005_1 + output_gap + 
-               iso2c, data = comb)
+m_r1 <- lm(cent_debt_gdp2005 ~ cent_debt_gdp2005_1 + output_gap + 
+                    iso2c, data = comb)
 
-sub_gov_liab <- comb %>% DropNA(c('gov_liabilities_gdp2005_1', 'output_gap'))
-sub_gov_liab$residuals_output_liab <- residuals(m_r1)
-sub_gov_liab <- slide(sub_gov_liab, Var = 'residuals_output_liab', 
-                            NewVar = 'residuals_output_liab_1',
-                            GroupVar = 'country', TimeVar = 'year')
+sub_debt <- comb %>% DropNA(c('cent_debt_gdp2005', 'cent_debt_gdp2005_1', 
+                                           'output_gap'))
+sub_debt$residuals_output_debt <- residuals(m_r1)
+sub_debt <- slide(sub_debt, Var = 'residuals_output_debt', 
+                               NewVar = 'residuals_output_debt_1',
+                               GroupVar = 'country', TimeVar = 'year')
 
 # Financial Stress Residuals
-m_r2 <- lm(residuals_output_liab ~ residuals_output_liab_1 + mean_stress + 
-               iso2c, data = sub_gov_liab)
-sub_gov_liab <- sub_gov_liab %>% DropNA(c('mean_stress'))
-sub_gov_liab$residuals_stress_liab <- residuals(m_r2)
+m_r2 <- lm(residuals_output_debt ~ residuals_output_debt_1 + mean_stress + 
+                    iso2c, data = sub_debt)
+sub_debt <- sub_debt %>% DropNA(c('residuals_output_debt_1', 'mean_stress'))
+sub_debt$residuals_stress_debt <- residuals(m_r2)
 
-sub_gov_liab <- slide(sub_gov_liab, Var = 'residuals_stress_liab', 
-                      NewVar = 'residuals_stress_liab_1',
-                      GroupVar = 'country', TimeVar = 'year')
+sub_debt <- slide(sub_debt, Var = 'residuals_stress_debt', 
+                               NewVar = 'residuals_stress_debt_1',
+                               GroupVar = 'country', TimeVar = 'year')
 
-sub_gov_liab$rs_change_liab <- sub_gov_liab$residuals_stress_liab -
-                            sub_gov_liab$residuals_stress_liab_1 
+sub_debt$rs_change_debt <- sub_debt$residuals_stress_debt -
+    sub_debt$residuals_stress_debt_1 
 
-sub_gov_liab <- slide(sub_gov_liab, Var = 'rs_change_liab', 
-                       NewVar = 'rs_change_liab_1',
-                       GroupVar = 'country', TimeVar = 'year')
+sub_debt <- slide(sub_debt, Var = 'rs_change_debt', 
+                               NewVar = 'rs_change_debt_1',
+                               GroupVar = 'country', TimeVar = 'year')
 
 # ------------------------- Econ Spending Residuals -------------- #
 #### Create Total Spending Residuals ####
@@ -82,11 +81,11 @@ sub_gov_spend <- slide(sub_gov_spend, Var = 'rs_change_spend',
                       NewVar = 'rs_change_spend_1',
                       GroupVar = 'country', TimeVar = 'year')
 
-# Merge change in off-trend spending to off-trend liabilities
+# Merge change in off-trend spending to off-trend debt
 to_merge <- sub_gov_spend %>% select(iso2c, year, rs_change_spend, 
                                      rs_change_spend_1)
 
-sub_gov_liab <- merge(sub_gov_liab, to_merge, by = c('iso2c', 'year'), 
+sub_debt <- merge(sub_debt, to_merge, by = c('iso2c', 'year'), 
                       all.x = T)
 
 # ------------------------------- Regressions -------------------------------- #
@@ -105,40 +104,42 @@ m4_t0 <- lm(rs_change_spend ~ rs_change_spend_1 + election_year*lpr_1 +
                 execrlc + polconiii + fixed_exchange + iso2c, 
             data = sub_gov_spend)
 
-# Liabilities
-m5_t0 <- lm(rs_change_liab ~ rs_change_liab_1 + election_year + lpr_1 + 
+# Debt
+m5_t0 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year + lpr_1 + 
                 execrlc + polconiii + 
-                fixed_exchange, data = sub_gov_liab)
+                fixed_exchange, data = sub_debt)
 
 #### Post-Election Year ####
-# Liabilities
-m1_t1 <- lm(rs_change_liab ~ rs_change_liab_1 + election_year_1 + lpr, 
-            data = sub_gov_liab)
+# Debt
+m1_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1 + lpr, 
+            data = sub_debt)
 
-m2_t1 <- lm(rs_change_liab ~ rs_change_liab_1 + election_year_1*lpr, 
-            data = sub_gov_liab)
+m2_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr, 
+            data = sub_debt)
 
-m3_t1 <- lm(rs_change_liab ~ rs_change_liab_1 + election_year_1*lpr + iso2c, 
-            data = sub_gov_liab)
+m3_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + iso2c, 
+            data = sub_debt)
 
-m4_t1 <- lm(rs_change_liab ~ rs_change_liab_1 + election_year_1*lpr + execrlc + 
+m4_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + execrlc + 
                 polconiii + fixed_exchange + iso2c, 
-            data = sub_gov_liab)
+            data = sub_debt)
 
-m5_t1 <- lm(rs_change_liab ~ rs_change_liab_1 + election_year_1*lpr + execrlc + 
-                polconiii + fixed_exchange + rs_change_spend, 
-            data = sub_gov_liab)
+m5_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + rs_change_spend + 
+                election_year_1*lpr + execrlc + 
+                polconiii + fixed_exchange, 
+            data = sub_debt)
 
-m6_t1 <- lm(rs_change_liab ~ rs_change_liab_1 + election_year_1*lpr + execrlc + 
-                polconiii + fixed_exchange + rs_change_spend_1, 
-            data = sub_gov_liab)
+m6_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + rs_change_spend_1 + 
+                election_year_1*lpr + execrlc + 
+                polconiii + fixed_exchange, 
+            data = sub_debt)
 
 # Spending
 m7_t1 <- lm(rs_change_spend ~ rs_change_spend_1 + election_year_1 + lpr + 
                 execrlc + polconiii + fixed_exchange, data = sub_gov_spend)
 
 
-
+# ----------------- Other Tests ---------------------- #
 library(plm)
 
 plm1 <- pbltest(rs_change_spend ~ election_year + lpr_1 + rs_change_spend_1, 
@@ -149,14 +150,14 @@ plm1 <- pbltest(rs_change_spend ~ election_year + lpr_1 + rs_change_spend_1,
 ols <- lm(rs_change_spend ~ election_year + lpr_1 + rs_change_spend_1, 
             data = sub_gov_spend)
 
-plm2 <- plm(rs_change_liab ~ election_year_1 + rs_change_liab_1, 
+plm2 <- plm(rs_change_debt ~ election_year_1 + rs_change_debt_1, 
                  index = c('iso2c', 'year'),
-                 data = sub_gov_liab,
+                 data = sub_debt,
                  method = 'random')
 
-plm3 <- pbltest(rs_change_liab ~ election_year_1 + lpr + rs_change_liab_1, 
+plm3 <- pwfdtest(rs_change_debt ~ election_year_1 + lpr + rs_change_debt_1, 
              index = c('iso2c', 'year'),
-             data = sub_gov_liab,
-             method = 'random')
+             data = sub_debt,
+             method = 'within')
 
 pFtest(m1_t0, ols) 

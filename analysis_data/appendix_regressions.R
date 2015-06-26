@@ -23,48 +23,42 @@ comb$election_year <- comb$election_year %>% as.factor
 comb$election_year_1 <- comb$election_year_1 %>% as.factor
 
 ##### Create residuals #####
-# Create output gap change and government liabilities change variables
-
 # Output Gap Residuals
-m_r1_cent <- lm(cent_debt_gdp2005 ~ cent_debt_gdp2005_1 + output_gap + 
+m_r1_liab <- lm(gov_liabilities_gdp2005 ~ gov_liabilities_gdp2005_1 + output_gap + 
                iso2c, data = comb)
 
-residuals_stress_debt <- comb %>% DropNA(c('cent_debt_gdp2005', 'cent_debt_gdp2005_1', 
-                                  'output_gap'))
-residuals_stress_debt$residuals_output_debt <- residuals(m_r1_cent)
-residuals_stress_debt <- slide(residuals_stress_debt, Var = 'residuals_output_debt', 
+sub_gov_liab <- comb %>% DropNA(c('gov_liabilities_gdp2005_1', 'output_gap'))
+sub_gov_liab$residuals_output_liab <- residuals(m_r1_liab)
+sub_gov_liab <- slide(sub_gov_liab, Var = 'residuals_output_liab', 
                       NewVar = 'residuals_output_liab_1',
                       GroupVar = 'country', TimeVar = 'year')
 
 # Financial Stress Residuals
-m_r2_cent <- lm(residuals_output_debt ~ residuals_output_liab_1 + mean_stress + 
-               iso2c, data = residuals_stress_debt)
-residuals_stress_debt <- residuals_stress_debt %>% DropNA(c('residuals_output_liab_1', 
-                                          'mean_stress'))
-residuals_stress_debt$residuals_stress_debt <- residuals(m_r2_cent)
+m_r2_liab <- lm(residuals_output_liab ~ residuals_output_liab_1 + mean_stress + 
+               iso2c, data = sub_gov_liab)
+sub_gov_liab <- sub_gov_liab %>% DropNA(c('mean_stress'))
+sub_gov_liab$residuals_stress_liab <- residuals(m_r2_liab)
 
-residuals_stress_debt <- slide(residuals_stress_debt, Var = 'residuals_stress_debt', 
-                      NewVar = 'residuals_stress_debt_1',
+sub_gov_liab <- slide(sub_gov_liab, Var = 'residuals_stress_liab', 
+                      NewVar = 'residuals_stress_liab_1',
                       GroupVar = 'country', TimeVar = 'year')
 
-residuals_stress_debt$rs_change_debt <- residuals_stress_debt$residuals_stress_debt -
-    residuals_stress_debt$residuals_stress_debt_1 
+sub_gov_liab$rs_change_liab <- sub_gov_liab$residuals_stress_liab -
+    sub_gov_liab$residuals_stress_liab_1 
 
-residuals_stress_debt <- slide(residuals_stress_debt, Var = 'rs_change_debt', 
-                      NewVar = 'rs_change_debt_1',
+sub_gov_liab <- slide(sub_gov_liab, Var = 'rs_change_liab', 
+                      NewVar = 'rs_change_liab_1',
                       GroupVar = 'country', TimeVar = 'year')
-
 
 # ------------------------------- Regressions -------------------------------- #
-# Central government debt
+# OECD General Govermnment Liabilities
 
 # Election year
-m5_t0_cent_debt <- lm(rs_change_debt ~ rs_change_debt_1 + election_year*lpr_1 + 
-                          execrlc + 
-                          polconiii + fixed_exchange + iso2c, 
-                data = residuals_stress_debt)
+m5_t0_liab <- lm(rs_change_liab ~ rs_change_liab_1 + election_year*lpr_1 + 
+                          execrlc + polconiii + fixed_exchange, 
+                data = sub_gov_liab)
 
 # Post-election year
-m5_t1_cent_debt <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + execrlc + 
-                          polconiii + fixed_exchange, 
-                      data = residuals_stress_debt)
+m5_t1_liab <- lm(rs_change_liab ~ rs_change_liab_1 + election_year_1*lpr + 
+                     execrlc + polconiii + fixed_exchange, 
+                  data = sub_gov_liab)
