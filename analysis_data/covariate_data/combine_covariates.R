@@ -193,11 +193,21 @@ euro$euro_member <- 1
 #### Merge All ###
 comb <- merge(epfms_sum, oecd, by = c('iso2c', 'year'), all = T)
 comb <- merge(comb, dpi, by = c('iso2c', 'year'), all.x = T)
+comb <- FindDups(comb, c('iso2c', 'year'), NotDups = T)
+
 comb <- merge(comb, corrected_elections, by = c('iso2c', 'year'), all = T)
+comb <- FindDups(comb, c('iso2c', 'year'), NotDups = T)
+
 comb <- merge(comb, endog_election, by = c('iso2c', 'year'), all.x = T )
 comb <- merge(comb, loss_prob, by = c('iso2c', 'year'), all = T)
+comb <- FindDups(comb, c('iso2c', 'year'), NotDups = T)
+
 comb <- merge(comb, constraints, by = c('iso2c', 'year'), all.x = T)
+comb <- FindDups(comb, c('iso2c', 'year'), NotDups = T)
+
 comb <- merge(comb, euro, by = c('iso2c', 'year'), all.x = T)
+comb <- FindDups(comb, c('iso2c', 'year'), NotDups = T)
+
 
 comb <- comb %>% group_by(iso2c) %>% mutate(lpr = FillDown(Var = lpr))
 comb <- comb %>% mutate(lprsq = FillDown(Var = lprsq))
@@ -270,6 +280,8 @@ lagger <- function(var) {
 }
 
 for (i in vars_to_lag) comb <- lagger(i)
+
+FindDups(comb, Vars = c('iso2c', 'year'), test = T)
 
 #### Save data #### 
 export(comb, file = 'epfms_covariates.csv')

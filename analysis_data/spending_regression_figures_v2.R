@@ -17,7 +17,7 @@ setwd('/git_repositories/financial_crisis_fiscal_policy/')
 source('analysis_data/spending_regressions_v2.R')
 
 # Load plot function
-source_gist('d270ff55c2ca26286e90')
+devtools::source_gist('d270ff55c2ca26286e90')
 
 ##### Plot Debt/Stress 
 plot1 <- plot_me(obj = m4_t0, term1 = 'election_year1', term2 = 'lpr_1',

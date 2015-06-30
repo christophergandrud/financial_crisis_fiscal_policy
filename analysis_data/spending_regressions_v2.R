@@ -144,8 +144,7 @@ library(plm)
 
 plm1 <- pbltest(rs_change_spend ~ election_year + lpr_1 + rs_change_spend_1, 
              index = c('iso2c', 'year'),
-             data = sub_gov_spend,
-             method = 'random')
+             data = sub_gov_spend)
 
 ols <- lm(rs_change_spend ~ election_year + lpr_1 + rs_change_spend_1, 
             data = sub_gov_spend)
@@ -157,7 +156,6 @@ plm2 <- plm(rs_change_debt ~ election_year_1 + rs_change_debt_1,
 
 plm3 <- pwfdtest(rs_change_debt ~ election_year_1 + lpr + rs_change_debt_1, 
              index = c('iso2c', 'year'),
-             data = sub_debt,
-             method = 'within')
+             data = sub_debt)
 
 pFtest(m1_t0, ols) 
