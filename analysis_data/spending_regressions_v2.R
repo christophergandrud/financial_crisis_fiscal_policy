@@ -52,7 +52,8 @@ sub_debt <- slide(sub_debt, Var = 'rs_change_debt',
 
 # ------------------------- Econ Spending Residuals -------------- #
 #### Create Total Spending Residuals ####
-m_r1_econ <- lm(gov_econ_spend_gdp2005 ~ gov_econ_spend_gdp2005_1 + output_gap + iso2c,
+m_r1_econ <- lm(gov_econ_spend_gdp2005 ~ gov_econ_spend_gdp2005_1 + output_gap + 
+                    iso2c,
                 data = comb)
 
 sub_gov_spend <- comb %>% DropNA(c('gov_econ_spend_gdp2005', 
