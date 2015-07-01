@@ -15,6 +15,9 @@ library(WDI)
 
 setwd('/git_repositories/financial_crisis_fiscal_policy/analysis_data/covariate_data/')
 
+# Observation Identifying variables
+unique_id <- c('iso2c', 'year')
+
 # ------------------------------ Load and Clean Data ------------------------- #
 #### WDI Central Government Debt ####
 wdi <- WDI(indicator = 'GC.DOD.TOTL.GD.ZS', start = 2000, end = 2012) %>%
@@ -87,7 +90,7 @@ gdp <- gdp %>% iso_oecd
 
 # Find raw government finance numbers
 fix_gdp <- function(data, var, fix_year = 2005) {
-    data <- merge(data, gdp, by = c('iso2c', 'year'))
+    data <- merge(data, gdp, by = unique_id)
     
     raw_var <- sprintf('%s_raw', var)
     var_2005 <- sprintf('%s_gdp%s', var, fix_year)
@@ -125,13 +128,13 @@ fin_tranac <- fix_gdp(data = fin_tranac, var = 'financial_transactions') %>%
                            -gdp_billions)
 
 # Merge
-oecd <- merge(gov_liab, output_gap, by = c('iso2c', 'year'), all = T)
-oecd <- merge(oecd, wdi, by = c('iso2c', 'year'), all = T)
-oecd <- merge(oecd, gen_debt, by = c('iso2c', 'year'), all = T)
-oecd <- merge(oecd, deficit, by = c('iso2c', 'year'), all = T)
-oecd <- merge(oecd, gov_total_spend, by = c('iso2c', 'year'), all = T)
-oecd <- merge(oecd, gov_econ_spend, by = c('iso2c', 'year'), all = T)
-oecd <- merge(oecd, fin_tranac, by = c('iso2c', 'year'), all = T)
+oecd <- merge(gov_liab, output_gap, by = unique_id, all = T)
+oecd <- merge(oecd, wdi, by = unique_id, all = T)
+oecd <- merge(oecd, gen_debt, by = unique_id, all = T)
+oecd <- merge(oecd, deficit, by = unique_id, all = T)
+oecd <- merge(oecd, gov_total_spend, by = unique_id, all = T)
+oecd <- merge(oecd, gov_econ_spend, by = unique_id, all = T)
+oecd <- merge(oecd, fin_tranac, by = unique_id, all = T)
 
 ## Create Stock Flow Adjustment
 oecd$sfa <- oecd$gen_debt_gdp2005_change + oecd$deficit_gdp2005
@@ -142,7 +145,7 @@ dpi <- DpiGet(vars = c('execrlc')) %>%
 dpi$execrlc[dpi$execrlc == -999] <- NA
 
 #### Import election timing ####
-corrected_elections <- import('https://raw.githubusercontent.com/christophergandrud/yrcurnt_corrected/master/data/yrcurnt_original_corrected.csv') %>%
+corrected_elections <- import('http://bit.ly/1EM8EVE') %>%
                 select(iso2c, year, yrcurnt_corrected)
 
 corrected_elections$election_year <- 0
@@ -185,28 +188,31 @@ constraints <- import('raw/polcon2012.dta') %>%
 constraints <- constraints %>% iso_oecd
 
 #### Euro membership ####
-euro <- import('https://raw.githubusercontent.com/christophergandrud/euro_membership/master/data/euro_membership_data.csv') %>%
+euro <- import('http://bit.ly/1yRvycq') %>%
             select(-country)
 euro$euro_member <- 1
 
+#### Import Laeven and Valencia Banking Crisis Variable ####
+lv <- rio::import('http://bit.ly/1gacC47')
 
 #### Merge All ###
-comb <- merge(epfms_sum, oecd, by = c('iso2c', 'year'), all = T)
-comb <- merge(comb, dpi, by = c('iso2c', 'year'), all.x = T)
-comb <- FindDups(comb, c('iso2c', 'year'), NotDups = T)
+comb <- merge(epfms_sum, oecd, by = unique_id, all = T)
+comb <- merge(comb, dpi, by = unique_id, all.x = T)
+comb <- FindDups(comb, unique_id, NotDups = T)
 
-comb <- merge(comb, corrected_elections, by = c('iso2c', 'year'), all = T)
-comb <- FindDups(comb, c('iso2c', 'year'), NotDups = T)
+comb <- merge(comb, corrected_elections, by = unique_id, all = T)
+comb <- FindDups(comb, unique_id, NotDups = T)
 
-comb <- merge(comb, endog_election, by = c('iso2c', 'year'), all.x = T )
-comb <- merge(comb, loss_prob, by = c('iso2c', 'year'), all = T)
-comb <- FindDups(comb, c('iso2c', 'year'), NotDups = T)
+comb <- merge(comb, endog_election, by = unique_id, all.x = T )
+comb <- merge(comb, loss_prob, by = unique_id, all = T)
+comb <- FindDups(comb, unique_id, NotDups = T)
 
-comb <- merge(comb, constraints, by = c('iso2c', 'year'), all.x = T)
-comb <- FindDups(comb, c('iso2c', 'year'), NotDups = T)
+comb <- merge(comb, constraints, by = unique_id, all.x = T)
+comb <- FindDups(comb, unique_id, NotDups = T)
 
-comb <- merge(comb, euro, by = c('iso2c', 'year'), all.x = T)
-comb <- FindDups(comb, c('iso2c', 'year'), NotDups = T)
+comb <- merge(comb, euro, by = unique_id, all.x = T)
+comb <- merge(comb, lv, by = unique_id, all.x = T)
+comb <- FindDups(comb, unique_id, NotDups = T)
 
 
 comb <- comb %>% group_by(iso2c) %>% mutate(lpr = FillDown(Var = lpr))
@@ -281,7 +287,7 @@ lagger <- function(var) {
 
 for (i in vars_to_lag) comb <- lagger(i)
 
-FindDups(comb, Vars = c('iso2c', 'year'), test = T)
+FindDups(comb, Vars = unique_id, test = T)
 
 #### Save data #### 
 export(comb, file = 'epfms_covariates.csv')

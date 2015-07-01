@@ -8,6 +8,7 @@
 library(rio)
 library(dplyr)
 library(lubridate)
+library(plm)
 library(DataCombine)
 library(ggplot2)
 
@@ -90,6 +91,11 @@ sub_debt <- merge(sub_debt, to_merge, by = c('iso2c', 'year'),
                       all.x = T)
 
 # ------------------------------- Regressions -------------------------------- #
+#### Set up plm object ####
+# Not done before due to issues with subsetting data set for residuals
+sub_gov_spend <- pdata.frame(sub_gov_spend, index = c('iso2c', 'year'))
+sub_debt <- pdata.frame(sub_debt, index = c('iso2c', 'year'))
+
 #### Election Year #### 
 # Spending
 m1_t0 <- lm(rs_change_spend ~ rs_change_spend_1 + election_year + lpr_1, 
@@ -141,8 +147,6 @@ m7_t1 <- lm(rs_change_spend ~ rs_change_spend_1 + election_year_1 + lpr +
 
 
 # ----------------- Other Tests ---------------------- #
-library(plm)
-
 plm1 <- pbltest(rs_change_spend ~ election_year + lpr_1 + rs_change_spend_1, 
              index = c('iso2c', 'year'),
              data = sub_gov_spend)
