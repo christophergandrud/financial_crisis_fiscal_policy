@@ -7,6 +7,7 @@
 
 # Load required packages
 library(dplyr)
+library(DataCombine)
 library(stargazer)
 library(xtable)
 
@@ -17,7 +18,7 @@ setwd('/git_repositories/financial_crisis_fiscal_policy/')
 source('analysis_data/spending_regressions_v2.R')
 
 # Residual Regressions
-stargazer(m_r1, m_r1_econ, m_r2, m_r2_econ,
+stargazer(m_r1, m_r1_econ, m_r2_basic, m_r2, m_r2_econ_basic, m_r2_econ,
           dep.var.labels = c('Debt', 
                              'Econ. Spend', 
                              'Debt Resid.',
@@ -27,7 +28,9 @@ stargazer(m_r1, m_r1_econ, m_r2, m_r2_econ,
                                'Output Gap',
                                'Debt Resid.$_{t-1}$',
                                'Econ. Spend Resid.$_{t-1}$',
-                               'Perceived Financial Stress'),
+                               'Banking Crisis',
+                               'Perceived Stress Intensity',
+                               'Crisis * Intensity'),
           omit = 'iso2c', omit.labels = 'country fixed effects',
           float = F,
           df = F,
@@ -74,6 +77,7 @@ stargazer(m1_t1, m2_t1, m3_t1, m4_t1, m5_t1, m6_t1, m7_t1,
 #### Online Appendix #### 
 # Country sample
 countries <- sub_debt %>% arrange(country, year) %>%
+                DropNA('lpr') %>%
                 rename(Country = country) %>%
                 select(Country) %>%
                 unique %>% as.vector

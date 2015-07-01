@@ -34,9 +34,10 @@ sub_gov_liab <- slide(sub_gov_liab, Var = 'residuals_output_liab',
                       GroupVar = 'country', TimeVar = 'year')
 
 # Financial Stress Residuals
-m_r2_liab <- lm(residuals_output_liab ~ residuals_output_liab_1 + mean_stress + 
-               iso2c, data = sub_gov_liab)
-sub_gov_liab <- sub_gov_liab %>% DropNA(c('mean_stress'))
+m_r2_liab <- lm(residuals_output_liab ~ residuals_output_liab_1 + 
+                    lv_bank_crisis*mean_stress, data = sub_gov_liab)
+sub_gov_liab <- sub_gov_liab %>% DropNA(c('residuals_output_liab_1', 
+                                          'lv_bank_crisis', 'mean_stress'))
 sub_gov_liab$residuals_stress_liab <- residuals(m_r2_liab)
 
 sub_gov_liab <- slide(sub_gov_liab, Var = 'residuals_stress_liab', 

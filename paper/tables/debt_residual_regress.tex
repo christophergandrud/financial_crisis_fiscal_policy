@@ -1,47 +1,53 @@
 
 % Table created by stargazer v.5.1 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-% Date and time: Wed, Jul 01, 2015 - 08:34:20
+% Date and time: Wed, Jul 01, 2015 - 10:59:56
 \begingroup 
 \tiny 
-\begin{tabular}{@{\extracolsep{5pt}}lcccc} 
+\begin{tabular}{@{\extracolsep{5pt}}lcccccc} 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
- & \multicolumn{4}{c}{\textit{Dependent variable:}} \\ 
-\cline{2-5} 
-\\[-1.8ex] & Debt & Econ. Spend & Debt Resid. & Econ. Spend Resid. \\ 
-\\[-1.8ex] & (1) & (2) & (3) & (4)\\ 
+ & \multicolumn{6}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-7} 
+\\[-1.8ex] & Debt & Econ. Spend & \multicolumn{2}{c}{Debt Resid.} & \multicolumn{2}{c}{Econ. Spend Resid.} \\ 
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6)\\ 
 \hline \\[-1.8ex] 
- Debt$_{t-1}$ & 0.985$^{***}$ &  &  &  \\ 
-  & (0.035) &  &  &  \\ 
-  & & & & \\ 
- Spending$_{t-1}$ &  & 0.184$^{***}$ &  &  \\ 
-  &  & (0.060) &  &  \\ 
-  & & & & \\ 
- Output Gap & $-$0.337$^{***}$ & $-$0.038 &  &  \\ 
-  & (0.107) & (0.031) &  &  \\ 
-  & & & & \\ 
- Debt Resid.$_{t-1}$ &  &  & 0.151$^{**}$ &  \\ 
-  &  &  & (0.076) &  \\ 
-  & & & & \\ 
- Econ. Spend Resid.$_{t-1}$ &  &  &  & $-$0.120$^{*}$ \\ 
-  &  &  &  & (0.071) \\ 
-  & & & & \\ 
- Perceived Financial Stress &  &  & 7.513$^{**}$ & 2.222$^{*}$ \\ 
-  &  &  & (3.716) & (1.168) \\ 
-  & & & & \\ 
- Constant & 3.154 & 4.605$^{***}$ & $-$3.926 & $-$1.004 \\ 
-  & (2.846) & (0.599) & (2.726) & (0.845) \\ 
-  & & & & \\ 
+ Debt$_{t-1}$ & 0.985$^{***}$ &  &  &  &  &  \\ 
+  & (0.035) &  &  &  &  &  \\ 
+  & & & & & & \\ 
+ Spending$_{t-1}$ &  & 0.184$^{***}$ &  &  &  &  \\ 
+  &  & (0.060) &  &  &  &  \\ 
+  & & & & & & \\ 
+ Output Gap & $-$0.337$^{***}$ & $-$0.038 &  &  &  &  \\ 
+  & (0.107) & (0.031) &  &  &  &  \\ 
+  & & & & & & \\ 
+ Debt Resid.$_{t-1}$ &  &  & 0.152$^{**}$ & 0.182$^{***}$ &  &  \\ 
+  &  &  & (0.068) & (0.070) &  &  \\ 
+  & & & & & & \\ 
+ Econ. Spend Resid.$_{t-1}$ &  &  &  &  & $-$0.091 & $-$0.106 \\ 
+  &  &  &  &  & (0.062) & (0.066) \\ 
+  & & & & & & \\ 
+ Banking Crisis &  &  & 2.843$^{***}$ & 21.676$^{***}$ & 0.737$^{***}$ & 3.466$^{***}$ \\ 
+  &  &  & (0.755) & (3.766) & (0.226) & (1.199) \\ 
+  & & & & & & \\ 
+ Perceived Stress Intensity &  &  &  & 9.147$^{**}$ &  & 2.138 \\ 
+  &  &  &  & (4.260) &  & (1.390) \\ 
+  & & & & & & \\ 
+ Crisis * Intensity &  &  &  & $-$36.259$^{***}$ &  & $-$5.499$^{**}$ \\ 
+  &  &  &  & (7.204) &  & (2.298) \\ 
+  & & & & & & \\ 
+ Constant & 3.154 & 4.605$^{***}$ & $-$0.625 & $-$4.483$^{**}$ & $-$0.146 & $-$1.001 \\ 
+  & (2.846) & (0.599) & (0.402) & (1.856) & (0.117) & (0.607) \\ 
+  & & & & & & \\ 
 \hline \\[-1.8ex] 
-country fixed effects & Yes & Yes & Yes & Yes \\ 
+country fixed effects & Yes & Yes & No & No & No & No \\ 
 \hline \\[-1.8ex] 
-Observations & 312 & 296 & 258 & 242 \\ 
-R$^{2}$ & 0.973 & 0.405 & 0.064 & 0.031 \\ 
-Adjusted R$^{2}$ & 0.969 & 0.338 & $-$0.070 & $-$0.107 \\ 
-Residual Std. Error & 5.603 & 1.651 & 5.753 & 1.760 \\ 
-F Statistic & 299.791$^{***}$ & 6.013$^{***}$ & 0.478 & 0.223 \\ 
+Observations & 312 & 296 & 252 & 232 & 262 & 238 \\ 
+R$^{2}$ & 0.973 & 0.405 & 0.091 & 0.181 & 0.042 & 0.063 \\ 
+Adjusted R$^{2}$ & 0.969 & 0.338 & 0.083 & 0.167 & 0.034 & 0.047 \\ 
+Residual Std. Error & 5.603 & 1.651 & 5.310 & 5.185 & 1.604 & 1.647 \\ 
+F Statistic & 299.791$^{***}$ & 6.013$^{***}$ & 12.406$^{***}$ & 12.578$^{***}$ & 5.620$^{***}$ & 3.916$^{***}$ \\ 
 \hline 
 \hline \\[-1.8ex] 
-\textit{Note:}  & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\textit{Note:}  & \multicolumn{6}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
 \end{tabular} 
 \endgroup 
