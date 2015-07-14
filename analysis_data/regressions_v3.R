@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------------- #
 # Elections, Electoral Loss Probabilities, and Government Fiscal Policies
-# Version 2
+# Version 3
 # Christopher Gandrud
 # MIT License
 # ---------------------------------------------------------------------------- #
@@ -93,13 +93,13 @@ m5_t0 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year*lpr_1 +
 
 #### Post-Election Year ####
 # Debt
-m1_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1 + lpr, 
+m1_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1 + lpr iso2c, 
             data = sub_debt)
 
-m2_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr, 
+m2_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + iso2c, 
             data = sub_debt)
 
-m3_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + iso2c, 
+m3_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr, 
             data = sub_debt)
 
 m4_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + execrlc + 
