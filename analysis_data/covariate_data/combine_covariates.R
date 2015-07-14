@@ -146,7 +146,7 @@ dpi$execrlc[dpi$execrlc == -999] <- NA
 
 #### Import election timing ####
 corrected_elections <- import('http://bit.ly/1EM8EVE') %>%
-                select(iso2c, year, yrcurnt_corrected)
+                             select(iso2c, year, yrcurnt_corrected)
 
 corrected_elections$election_year <- 0
 corrected_elections$election_year[is.na(corrected_elections$yrcurnt_corrected)] <- NA
@@ -180,6 +180,25 @@ epfms_index$year <- epfms_index$date %>% year
 epfms_sum <- epfms_index %>% group_by(iso2c, year) %>%
                 summarise(mean_stress = mean(C1_ma, na.rm = T))
 
+#### Bank assets %GDP from Helgi Library ####
+assets <- import('http://bit.ly/1K4rzBB', head = T) %>%
+                 select(1, 3:62)
+
+assets_gathered <- gather(assets, year, BankAssetsGDP, 2:ncol(assets))
+
+assets_gathered$year <- assets_gathered$year %>% as.character %>% as.numeric
+assets_gathered <- assets_gathered %>% filter(year >= 2000 & year <= 2013)
+
+# For years when BankAssetsGDP == 0, then NA
+assets_gathered$BankAssetsGDP[assets_gathered$BankAssetsGDP == 0] <- NA
+
+assets_gathered$iso2c <- countrycode(assets_gathered$Countries, 
+                                     origin = 'country.name', 
+                                     destination = 'iso2c')
+
+assets_gathered <- assets_gathered %>% select(iso2c, year, BankAssetsGDP) %>%
+                    arrange(iso2c, year)
+
 #### Henisz Political Constraints ####
 constraints <- import('raw/polcon2012.dta') %>%
                     select(polity_country, year, polconiii, polconv) %>%
@@ -212,6 +231,7 @@ comb <- FindDups(comb, unique_id, NotDups = T)
 
 comb <- merge(comb, euro, by = unique_id, all.x = T)
 comb <- merge(comb, lv, by = unique_id, all.x = T)
+comb <- merge(comb, assets_gathered, by = unique_id, all.x = T)
 comb <- FindDups(comb, unique_id, NotDups = T)
 
 
@@ -238,14 +258,12 @@ comb$fixed_exchange[comb$country == 'Slovenia' & comb$year >= 2004] <- 1
 comb$fixed_exchange[comb$country == 'Switzerland' & comb$year >= 2011 &
                         comb$year < 2015] <- 1
 
-
 #### Clean up Loss Probability Variables ####
 # Fix missing in Kayser and Lindstät
 comb$lpr[comb$country == 'Australia' & comb$year >= 2007] <- NA
 comb$lprsq[comb$country == 'Australia' & comb$year >= 2007] <- NA
 comb$SameAsPM[comb$country == 'Australia' & comb$year >= 2007] <- NA
 comb$ParlSys[comb$country == 'Australia' & comb$year >= 2007] <- NA
-
 
 comb$lpr[comb$country == 'France' & comb$year >= 2007] <- NA
 comb$lprsq[comb$country == 'France' & comb$year >= 2007] <- NA

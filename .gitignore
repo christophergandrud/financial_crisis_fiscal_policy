@@ -127,3 +127,4 @@ sympy-plots-for-*.tex/
 
 .Rhistory
 .DS_Store
+.RData
