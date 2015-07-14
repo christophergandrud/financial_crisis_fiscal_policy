@@ -93,7 +93,7 @@ m5_t0 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year*lpr_1 +
 
 #### Post-Election Year ####
 # Debt
-m1_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1 + lpr iso2c, 
+m1_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1 + lpr + iso2c, 
             data = sub_debt)
 
 m2_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + iso2c, 
