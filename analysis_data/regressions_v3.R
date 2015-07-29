@@ -116,6 +116,13 @@ m6_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + rs_change_spend_1 +
                 polconiii + fixed_exchange, 
             data = sub_debt)
 
+# Drop outliers
+dropped_outliers <- sub_debt %>% filter(country != 'Greece' & 
+                                            country != 'Iceland')
+
+m7_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + iso2c, 
+            data = dropped_outliers)
+
 # Spending
-m7_t1 <- lm(rs_change_spend ~ rs_change_spend_1 + election_year_1 + lpr + 
+m8_t1 <- lm(rs_change_spend ~ rs_change_spend_1 + election_year_1 + lpr + 
                 execrlc + polconiii + fixed_exchange, data = sub_gov_spend)
