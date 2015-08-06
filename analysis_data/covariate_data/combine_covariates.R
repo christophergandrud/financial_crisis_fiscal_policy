@@ -214,6 +214,17 @@ euro$euro_member <- 1
 #### Import Laeven and Valencia Banking Crisis Variable ####
 lv <- rio::import('http://bit.ly/1gacC47')
 
+#### Import Bloomberg bond spread data ####
+bloom <- import('raw/bloomberg_datastream_quarterly_data.csv')
+bloom$year <- round(bloom$quarter, digits = 0)
+
+bloom <- bloom[, c('iso2c', 'year', 'bond_spread_local_US_10yr_bloomberg')]
+
+# Create annual averages
+bloom <- bloom %>% group_by(iso2c, year) %>% 
+            summarise(bond_spread = mean(bond_spread_local_US_10yr_bloomberg,
+                                              na.rm = T))
+
 #### Merge All ###
 comb <- merge(epfms_sum, oecd, by = unique_id, all = T)
 comb <- merge(comb, dpi, by = unique_id, all.x = T)
@@ -232,6 +243,7 @@ comb <- FindDups(comb, unique_id, NotDups = T)
 comb <- merge(comb, euro, by = unique_id, all.x = T)
 comb <- merge(comb, lv, by = unique_id, all.x = T)
 comb <- merge(comb, assets_gathered, by = unique_id, all.x = T)
+comb <- merge(comb, bloom, by = unique_id, all.x = T)
 comb <- FindDups(comb, unique_id, NotDups = T)
 
 

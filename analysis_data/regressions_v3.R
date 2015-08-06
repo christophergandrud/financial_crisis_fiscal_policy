@@ -70,6 +70,10 @@ to_merge <- sub_gov_spend %>% select(iso2c, year, rs_change_spend,
 sub_debt <- merge(sub_debt, to_merge, by = c('iso2c', 'year'), 
                   all.x = T)
 
+# Drop outliers
+dropped_outliers <- sub_debt %>% filter(country != 'Greece' & 
+                                            country != 'Iceland')
+
 # ------------------------------- Regressions -------------------------------- #
 ### Election Year #### 
 # Spending
@@ -102,25 +106,23 @@ m2_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + iso2c,
 m3_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr, 
             data = sub_debt)
 
-m4_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + execrlc + 
-                polconiii + fixed_exchange + iso2c, 
+m4_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + 
+                bond_spread + execrlc + polconiii + fixed_exchange, 
             data = sub_debt)
 
-m5_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + rs_change_spend + 
-                election_year_1*lpr + execrlc + 
+m5_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + 
+                election_year_1*lpr + bond_spread + execrlc + 
                 polconiii + fixed_exchange, 
-            data = sub_debt)
+            data = dropped_outliers)
 
-m6_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + rs_change_spend_1 + 
-                election_year_1*lpr + execrlc + 
+m6_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + rs_change_spend + 
+                election_year_1*lpr + bond_spread + execrlc + 
                 polconiii + fixed_exchange, 
-            data = sub_debt)
+            data = dropped_outliers)
 
-# Drop outliers
-dropped_outliers <- sub_debt %>% filter(country != 'Greece' & 
-                                            country != 'Iceland')
-
-m7_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + election_year_1*lpr + iso2c, 
+m7_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + rs_change_spend_1 + 
+                election_year_1*lpr + bond_spread + execrlc + 
+                polconiii + fixed_exchange, 
             data = dropped_outliers)
 
 # Spending
