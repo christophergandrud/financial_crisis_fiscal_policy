@@ -64,7 +64,7 @@ sub_gov_spend <- slide(sub_gov_spend, Var = 'rs_change_spend',
                        GroupVar = 'country', TimeVar = 'year')
 
 # Merge change in off-trend spending to off-trend debt
-to_merge <- sub_gov_spend %>% select(iso2c, year, rs_change_spend, 
+to_merge <- sub_gov_spend %>% dplyr::select(iso2c, year, rs_change_spend, 
                                      rs_change_spend_1)
 
 sub_debt <- merge(sub_debt, to_merge, by = c('iso2c', 'year'), 
@@ -128,3 +128,4 @@ m7_t1 <- lm(rs_change_debt ~ rs_change_debt_1 + rs_change_spend_1 +
 # Spending
 m8_t1 <- lm(rs_change_spend ~ rs_change_spend_1 + election_year_1 + lpr + 
                 execrlc + polconiii + fixed_exchange, data = sub_gov_spend)
+
